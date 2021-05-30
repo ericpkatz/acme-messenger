@@ -14,7 +14,8 @@ const init = async () => {
     // start listening (and create a 'server' object representing our server)
     app.listen(PORT, () => console.log(`Mixing it up on port ${PORT}`))
   } catch (ex) {
-    console.log(ex)
+    console.log(require('chalk').red(ex));
+    console.log(require('chalk').red(ex.stack));
   }
 }
 

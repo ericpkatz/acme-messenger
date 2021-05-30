@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {logout} from '../store'
 
-const Navbar = ({handleClick, isLoggedIn}) => (
+const Navbar = ({handleClick, isLoggedIn, messageCount }) => (
   <div>
     <h1>FS-App-Template</h1>
     <nav>
@@ -11,6 +11,7 @@ const Navbar = ({handleClick, isLoggedIn}) => (
         <div>
           {/* The navbar will show these links after you log in */}
           <Link to="/home">Home</Link>
+          <Link to="/messages">Messages ({ messageCount })</Link>
           <a href="#" onClick={handleClick}>
             Logout
           </a>
@@ -32,7 +33,8 @@ const Navbar = ({handleClick, isLoggedIn}) => (
  */
 const mapState = state => {
   return {
-    isLoggedIn: !!state.auth.id
+    isLoggedIn: !!state.auth.id,
+    messageCount: state.messages.length
   }
 }
 

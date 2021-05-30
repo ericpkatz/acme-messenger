@@ -19,3 +19,29 @@ form div {
   margin: 1em;
   display: inline-block;
 }
+
+.message {
+  display: flex;
+  font-size: 0.75rem;
+  flex-direction: column;
+  border-bottom: solid 1px dodgerBlue;
+  margin: 1rem 0;
+}
+
+.message .text {
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  margin: 0.5rem;
+  background-color: cornSilk;
+}
+
+.message > div {
+  display: flex;
+}
+.message > div > * {
+  flex: 2;
+}
+.message label {
+  font-weight: bold;
+  flex: 1;
+}

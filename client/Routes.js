@@ -3,12 +3,18 @@ import {connect} from 'react-redux'
 import {withRouter, Route, Switch, Redirect} from 'react-router-dom'
 import { Login, Signup } from './components/AuthForm';
 import Home from './components/Home';
-import {me} from './store'
+import Messages from './components/Messages';
+import {me, loadMessages } from './store'
 
 /**
  * COMPONENT
  */
 class Routes extends Component {
+  componentDidUpdate(prevProps){
+    if(!prevProps.isLoggedIn && this.props.isLoggedIn){
+      this.props.loadMessages();
+    }
+  }
   componentDidMount() {
     this.props.loadInitialData()
   }
@@ -21,6 +27,7 @@ class Routes extends Component {
         {isLoggedIn ? (
           <Switch>
             <Route path="/home" component={Home} />
+            <Route path="/messages" component={Messages} />
             <Redirect to="/home" />
           </Switch>
         ) : (
@@ -50,7 +57,8 @@ const mapDispatch = dispatch => {
   return {
     loadInitialData() {
       dispatch(me())
-    }
+    },
+    loadMessages: ()=> dispatch(loadMessages())
   }
 }
 

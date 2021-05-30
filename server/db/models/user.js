@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
+const { UUID, UUIDV4 } = db.Sequelize;
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt');
 const axios = require('axios');
@@ -7,6 +8,11 @@ const axios = require('axios');
 const SALT_ROUNDS = 5;
 
 const User = db.define('user', {
+  id: {
+    type: UUID,
+    primaryKey: true,
+    defaultValue: UUIDV4
+  },
   username: {
     type: Sequelize.STRING,
     unique: true,
@@ -21,6 +27,21 @@ const User = db.define('user', {
 })
 
 module.exports = User
+
+User.prototype.getMessages = function(){
+  return db.models.message.findAll({
+    where: {
+      [db.Sequelize.Op.or]: [
+        { fromId: this.id },
+        { toId: this.id }
+      ]
+    },
+    include: [
+      { model: User, as: 'from'},
+      { model: User, as: 'to'},
+    ]
+  });
+}
 
 /**
  * instanceMethods

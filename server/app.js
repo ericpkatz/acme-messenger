@@ -10,6 +10,18 @@ app.use(morgan('dev'))
 // body parsing middleware
 app.use(express.json())
 
+const { models: { User, Message } } = require('./db');
+
+app.use('/api/messages', async(req, res, next)=> {
+  try {
+    const user = await User.findByToken(req.headers.authorization);
+    res.send(await user.getMessages());
+  }
+  catch(ex){
+    next(ex);
+  }
+
+});
 // auth and api routes
 app.use('/auth', require('./auth'))
 app.use('/api', require('./api'))
@@ -37,7 +49,7 @@ app.use('*', (req, res) => {
 
 // error handling endware
 app.use((err, req, res, next) => {
-  console.error(err)
+  console.log(require('chalk').red(err));
   console.error(err.stack)
   res.status(err.status || 500).send(err.message || 'Internal server error.')
 })
