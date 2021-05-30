@@ -5,10 +5,23 @@ import {connect} from 'react-redux'
  * COMPONENT
  */
 export const Messages = props => {
-  const {messages} = props
+  const {messages, users} = props
 
   return (
     <div>
+      <form className='messageForm'>
+        <select>
+          {
+            users.map( user => {
+              return (
+                <option>{ user.username }</option>
+              );
+            })
+          }
+        </select>
+        <textarea></textarea>
+        <button>Send Message</button>
+      </form>
       <ul>
         {
           messages.map( message => {
@@ -44,7 +57,8 @@ export const Messages = props => {
  */
 const mapState = state => {
   return {
-    messages: state.messages
+    messages: state.messages,
+    users: state.users
   }
 }
 

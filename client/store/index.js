@@ -6,7 +6,24 @@ import auth from './auth'
 import axios from 'axios';
 
 
+const LOAD_USERS = 'LOAD_USERS';
+
+const users = (state = [], action)=> {
+  if(action.type === LOAD_USERS){
+    return action.users;
+  }
+  return state;
+}
+
+export const loadUsers = ()=> {
+  return async(dispatch)=> {
+    const response = await axios.get('/api/users');
+    dispatch({ type: LOAD_USERS, users: response.data });
+  }
+};
+
 const LOAD_MESSAGES = 'LOAD_MESSAGES';
+
 const messages = (state = [], action)=> {
   if(action.type === LOAD_MESSAGES){
     return action.messages;
@@ -25,7 +42,7 @@ export const loadMessages = ()=> {
   }
 };
 
-const reducer = combineReducers({ auth, messages })
+const reducer = combineReducers({ auth, messages, users })
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({collapsed: true}))
 )

@@ -4,7 +4,7 @@ import {withRouter, Route, Switch, Redirect} from 'react-router-dom'
 import { Login, Signup } from './components/AuthForm';
 import Home from './components/Home';
 import Messages from './components/Messages';
-import {me, loadMessages } from './store'
+import {me, loadMessages, loadUsers } from './store'
 
 /**
  * COMPONENT
@@ -13,6 +13,7 @@ class Routes extends Component {
   componentDidUpdate(prevProps){
     if(!prevProps.isLoggedIn && this.props.isLoggedIn){
       this.props.loadMessages();
+      this.props.loadUsers();
     }
   }
   componentDidMount() {
@@ -58,7 +59,12 @@ const mapDispatch = dispatch => {
     loadInitialData() {
       dispatch(me())
     },
-    loadMessages: ()=> dispatch(loadMessages())
+    loadMessages: ()=> {
+      dispatch(loadMessages())
+    },
+    loadUsers: ()=> {
+      dispatch(loadUsers())
+    }
   }
 }
 
