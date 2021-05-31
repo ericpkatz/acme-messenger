@@ -12,6 +12,19 @@ const Message = db.define('message', {
 Message.belongsTo(User, { as: 'from' });
 Message.belongsTo(User, { as: 'to' });
 
+Message.addHook('afterCreate', async(message)=> {
+  message = await Message.findByPk(message.id, {
+    include: [
+      { model: User, as: 'from'},
+      { model: User, as: 'to'},
+    ]
+  });
+  const socket = require('../socketServer').sockets().find(socket => socket.userId === message.toId);
+  if(socket){
+    socket.send(JSON.stringify({type: 'ADD_MESSAGE', message}));
+  }
+});
+
 //associations could go here!
 
 module.exports = {

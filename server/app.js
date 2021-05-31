@@ -12,6 +12,16 @@ app.use(express.json())
 
 const { models: { User, Message } } = require('./db');
 
+const socketServer = require('./socketServer');
+app.get('/api/sockets', (req, res, next)=> {
+  res.send(socketServer.sockets().map( socket => {
+    console.log(socket);
+    return {
+      userId: socket.userId
+    };
+  }));
+});
+
 app.get('/api/messages', async(req, res, next)=> {
   try {
     const user = await User.findByToken(req.headers.authorization);

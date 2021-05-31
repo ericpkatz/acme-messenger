@@ -14,6 +14,21 @@ class Routes extends Component {
     if(!prevProps.isLoggedIn && this.props.isLoggedIn){
       this.props.loadMessages();
       this.props.loadUsers();
+      window.socket = new WebSocket(window.document.location.origin.replace('http', 'ws'));
+      window.socket.addEventListener('open', ()=> {
+        window.socket.send(JSON.stringify({
+          token: window.localStorage.getItem('token')
+        }));
+        window.socket.addEventListener('message', (ev)=> {
+          try {
+            const action = JSON.parse(ev.data);
+            this.props.d(action);
+          }
+          catch(ex){
+            console.log(ex);
+          }
+        });
+      });
     }
   }
   componentDidMount() {
@@ -64,6 +79,9 @@ const mapDispatch = dispatch => {
     },
     loadUsers: ()=> {
       dispatch(loadUsers())
+    },
+    d: (message)=> {
+      dispatch(message);
     }
   }
 }
