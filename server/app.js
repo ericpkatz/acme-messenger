@@ -12,7 +12,7 @@ app.use(express.json())
 
 const { models: { User, Message } } = require('./db');
 
-app.use('/api/messages', async(req, res, next)=> {
+app.get('/api/messages', async(req, res, next)=> {
   try {
     const user = await User.findByToken(req.headers.authorization);
     res.send(await user.getMessages());
@@ -20,7 +20,22 @@ app.use('/api/messages', async(req, res, next)=> {
   catch(ex){
     next(ex);
   }
+});
 
+app.post('/api/messages', async(req, res, next)=> {
+  try {
+    const user = await User.findByToken(req.headers.authorization);
+    const message = await Message.create({fromId: user.id, ...req.body});
+    res.status(201).send(await Message.findByPk(message.id, {
+      include: [
+        { model: User, as: 'to' },
+        { model: User, as: 'from' },
+      ]
+    }));
+  }
+  catch(ex){
+    next(ex);
+  }
 });
 // auth and api routes
 app.use('/auth', require('./auth'))

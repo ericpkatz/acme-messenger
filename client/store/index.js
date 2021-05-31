@@ -23,10 +23,14 @@ export const loadUsers = ()=> {
 };
 
 const LOAD_MESSAGES = 'LOAD_MESSAGES';
+const ADD_MESSAGE = 'ADD_MESSAGE'; 
 
 const messages = (state = [], action)=> {
   if(action.type === LOAD_MESSAGES){
     return action.messages;
+  }
+  if(action.type === ADD_MESSAGE){
+    return [action.message, ...state];
   }
   return state;
 }
@@ -39,6 +43,17 @@ export const loadMessages = ()=> {
       }
     });
     dispatch({ type: LOAD_MESSAGES, messages: response.data });
+  }
+};
+
+export const sendMessage = (message)=> {
+  return async(dispatch)=> {
+    const response = await axios.post('/api/messages', message, {
+      headers: {
+        authorization: window.localStorage.getItem('token')
+      }
+    });
+    dispatch({ type: ADD_MESSAGE, message: response.data });
   }
 };
 

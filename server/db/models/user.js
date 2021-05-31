@@ -39,7 +39,8 @@ User.prototype.getMessages = function(){
     include: [
       { model: User, as: 'from'},
       { model: User, as: 'to'},
-    ]
+    ],
+    order: [['createdAt', 'DESC']]
   });
 }
 
